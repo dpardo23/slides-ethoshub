@@ -6,8 +6,14 @@ body {
     padding: 0;
     background-color: #000000;
     font-family: 'Sora', sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     color: white;
+}
+
+html {
+    scrollbar-color: #8B5CF6 rgba(255, 255, 255, 0.05);
+    scrollbar-width: thin;
 }
 
 .glow-cyan {

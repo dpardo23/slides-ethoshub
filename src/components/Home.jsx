@@ -25,14 +25,17 @@ const EthosLogoLarge = () => (
 
 export const Home = ({ onStart }) => {
     return (
-        <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden bg-black px-6">
+        <div
+            // CORRECCIÓN: 'overflow-hidden' en escritorio (md:) asegura que no aparezcan barras de scroll laterales o verticales accidentales.
+            className="relative w-full h-full flex flex-col items-center justify-start md:justify-center overflow-y-auto md:overflow-hidden overflow-x-hidden bg-black px-6 py-20 md:py-0 custom-scrollbar"
+        >
             {/* Fondo Animado de Partículas / Red */}
-            <div className="absolute inset-0 z-0 opacity-30">
+            <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-900/20 blur-[120px] rounded-full animate-bounce" style={{ animationDuration: '15s' }} />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-900/10 blur-[120px] rounded-full animate-pulse" style={{ animationDuration: '10s' }} />
             </div>
 
-            <div className="relative z-10 flex flex-col items-center text-center max-w-4xl">
+            <div className="relative z-10 flex flex-col items-center text-center max-w-4xl w-full">
                 <EthosLogoLarge />
 
                 <motion.div
@@ -57,26 +60,27 @@ export const Home = ({ onStart }) => {
                 >
                     <button
                         onClick={onStart}
-                        className="group relative px-8 py-4 bg-white text-black font-bold rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 flex items-center gap-3"
+                        className="group relative px-8 py-4 bg-white text-black font-bold rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 flex items-center gap-3 w-full md:w-auto"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-violet-200 to-cyan-100 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <span className="relative z-10 uppercase text-xs tracking-widest">Explorar Sprints</span>
                         <ChevronRight className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
 
-                    <div className="flex items-center gap-3 px-6 py-4 border border-white/10 rounded-2xl backdrop-blur-md bg-white/5">
+                    <div className="flex items-center justify-center gap-3 px-6 py-4 border border-white/10 rounded-2xl backdrop-blur-md bg-white/5 w-full md:w-auto">
                         <Shield className="w-4 h-4 text-[#B7F4FF]" />
                         <span className="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Byte Busters S.R.L. © 2026</span>
                     </div>
                 </motion.div>
             </div>
 
-            {/* Decoración Inferior */}
+            {/* Decoración Inferior (CORREGIDA: Ahora solo se muestra en pantallas pequeñas como celulares) */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 transition={{ delay: 2 }}
-                className="absolute bottom-12 flex flex-col items-center gap-2"
+                // Cambiado de 'md:hidden' a 'sm:hidden' para ocultarse en tablets y PC de forma más agresiva.
+                className="flex sm:hidden absolute bottom-12 flex-col items-center gap-2 pointer-events-none"
             >
                 <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-violet-500 to-transparent" />
                 <span className="text-[8px] text-gray-600 uppercase tracking-[0.5em]">Desplácese para comenzar</span>

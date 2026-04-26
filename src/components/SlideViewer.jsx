@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, TrendingDown, TrendingUp, CheckCircle2, Rocket, Zap, FileText, Clock, ClipboardCheck, Bug } from 'lucide-react';
+import { ChevronRight, ChevronLeft, TrendingDown, TrendingUp, CheckCircle2, Rocket, Zap, FileText, Clock, ClipboardCheck, Bug, AlertCircle, Shield as ShieldIcon } from 'lucide-react';
 
 const DonutChart = ({ percentage, color, label, sublabel }) => {
     const radius = 35;
@@ -64,7 +64,9 @@ export const SlideViewer = ({ slides, activeSprint }) => {
     if (!slides || slides.length === 0) {
         return (
             <div className="w-full h-full flex flex-col items-center justify-center text-center p-10">
-                <EthosLogo className="w-20 h-20 mb-8 opacity-20" />
+                <div className="absolute top-8 right-10 z-50">
+                    <EthosLogo className="w-10 h-10" />
+                </div>
                 <h2 className="text-2xl text-gray-500 font-light tracking-widest uppercase mb-4">Sprint {activeSprint}</h2>
                 <p className="text-sm text-gray-600 uppercase tracking-widest">En construcción...</p>
             </div>
@@ -77,8 +79,13 @@ export const SlideViewer = ({ slides, activeSprint }) => {
         <>
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={currentSlide} variants={slideVariants} initial="hidden" animate="visible" exit="exit"
-                    className="w-full h-full relative p-10 md:p-16 flex flex-col justify-center"
+                    key={currentSlide}
+                    variants={slideVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    // CORRECCIÓN PASO 2: Permitir scroll, barra personalizada y ajuste de alineación
+                    className="w-full h-full relative p-10 md:p-16 flex flex-col justify-start md:justify-center items-center overflow-y-auto custom-scrollbar pb-32"
                 >
                     {currentSlide !== 0 && (
                         <div className="absolute top-8 right-10 z-50 flex items-center gap-6">
@@ -91,29 +98,29 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                     )}
 
                     {slide.id === 'portada' && (
-                        <div className="flex flex-col items-center text-center">
+                        <div className="flex flex-col items-center text-center py-10 md:py-0">
                             <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-10"><EthosLogo className="w-24 h-24 mx-auto" /></motion.div>
                             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-8">
                                 {slide.title.split(" ").map((w, i) => <span key={i} className={w.includes("Sprint") || w.includes("Review") ? "text-[#8B5CF6] violet-pulse" : ""}>{w} </span>)}
                             </h1>
                             <p className="text-xl font-light text-[#B7F4FF] tracking-[0.3em] uppercase mb-24 opacity-60">{slide.subtitle}</p>
-                            <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end border-t border-white/5 pt-8 text-[9px] tracking-[0.4em] uppercase text-gray-600 font-bold">
-                                <div className="flex flex-col gap-1"><span>Entidad</span><span className="text-white/40">{slide.footerLeft}</span></div>
-                                <div className="flex flex-col gap-1 items-end"><span>Liderazgo</span><span className="text-[#8B5CF6]">{slide.footerRight}</span></div>
+                            <div className="w-full max-w-4xl flex justify-between items-end border-t border-white/5 pt-8 text-[9px] tracking-[0.4em] uppercase text-gray-600 font-bold mt-auto md:mt-0">
+                                <div className="flex flex-col gap-1 text-left"><span>Entidad</span><span className="text-white/40">{slide.footerLeft}</span></div>
+                                <div className="flex flex-col gap-1 text-right"><span>Liderazgo</span><span className="text-[#8B5CF6]">{slide.footerRight}</span></div>
                             </div>
                         </div>
                     )}
 
                     {slide.id === 'objetivo' && (
-                        <div className="max-w-6xl mx-auto w-full">
-                            <div className="mb-12 border-l-4 border-[#8B5CF6] pl-8">
+                        <div className="max-w-6xl mx-auto w-full py-10 md:py-0">
+                            <div className="mb-12 border-l-4 border-[#8B5CF6] pl-8 text-left">
                                 <h2 className="text-xs font-bold text-[#8B5CF6] tracking-[0.5em] uppercase mb-4">{slide.epicId} / Módulo Core</h2>
                                 <h3 className="text-4xl font-bold mb-4">{slide.title}</h3>
                                 <p className="text-lg text-white/80 max-w-3xl leading-relaxed font-light">{slide.lead}</p>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                                 {slide.pillars.map((p, i) => (
-                                    <motion.div variants={itemVariants} transition={{ delay: i * 0.1 }} key={i} className="p-6 bg-white/[0.03] border border-white/5 rounded-2xl group hover:bg-violet-600/5 transition-all">
+                                    <motion.div variants={itemVariants} transition={{ delay: i * 0.1 }} key={i} className="p-6 bg-white/[0.03] border border-white/5 rounded-2xl group hover:bg-violet-600/5 transition-all text-left">
                                         <div className="text-[#8B5CF6] mb-4 group-hover:scale-110 transition-transform">{p.icon}</div>
                                         <h4 className="font-bold text-[10px] tracking-widest uppercase mb-2 text-[#B7F4FF]">{p.label}</h4>
                                         <p className="text-[11px] text-gray-500 leading-snug">{p.desc}</p>
@@ -124,7 +131,7 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                     )}
 
                     {(['semana1', 'semana2', 'sprint3_sem1', 'sprint3_sem2'].includes(slide.id)) && (
-                        <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+                        <div className="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-16 items-center py-10 md:py-0 text-left">
                             <div className="md:col-span-5">
                                 <div className="mb-10">
                                     <span className={`text-[9px] font-bold tracking-[0.4em] uppercase ${slide.id.includes('sprint3') ? 'text-[#B7F4FF]' : 'text-violet-500'}`}>
@@ -149,7 +156,7 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                     )}
 
                     {slide.id === 'metricas_graficos' && (
-                        <div className="max-w-6xl mx-auto w-full">
+                        <div className="max-w-6xl mx-auto w-full py-10 md:py-0 text-left">
                             <h2 className="text-4xl font-bold mb-8">{slide.title}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
                                 {['burndown', 'burnup'].map((type, i) => (
@@ -162,21 +169,14 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                                         </h3>
                                         <div className="h-40 w-full relative pt-2 pr-2">
                                             <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                                {/* Ejes base */}
                                                 <line x1="0" y1="0" x2="0" y2="100" stroke="#333" strokeWidth="0.5" />
                                                 <line x1="0" y1="100" x2="100" y2="100" stroke="#333" strokeWidth="0.5" />
-
-                                                {/* Línea Ideal de fondo */}
                                                 <line x1="0" y1={type === 'burndown' ? '0' : '100'} x2="100" y2={type === 'burndown' ? '100' : '0'} stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4" />
-
-                                                {/* Línea conectora muy fina y punteada en lugar de gruesa */}
                                                 <motion.path
                                                     initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, ease: "easeInOut" }}
                                                     d={`M 0 ${type === 'burndown' ? '0' : '100'} ${slide[type].map((v, idx) => `L ${(idx * 100) / 10} ${100 - (v * 100) / 46}`).join(' ')}`}
                                                     fill="none" stroke={type === 'burndown' ? '#8B5CF6' : '#B7F4FF'} strokeWidth="0.5" strokeDasharray="2 2" opacity="0.4"
                                                 />
-
-                                                {/* Los Puntos (Scatter) */}
                                                 {slide[type].map((v, idx) => (
                                                     <motion.circle
                                                         key={idx}
@@ -193,8 +193,6 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                                     </motion.div>
                                 ))}
                             </div>
-
-                            {/* Renderizado dinámico del Bloque de Contexto */}
                             {slide.analysis && (
                                 <motion.div variants={itemVariants} transition={{ delay: 0.5 }} className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                                     {slide.analysis.map((item, idx) => (
@@ -211,7 +209,7 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                     )}
 
                     {slide.id === 'metricas_exito' && (
-                        <div className="max-w-6xl mx-auto w-full">
+                        <div className="max-w-6xl mx-auto w-full py-10 md:py-0 text-left">
                             <h2 className="text-4xl font-bold mb-10">{slide.title}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-10">
                                 {slide.stats.map((s, i) => (
@@ -236,7 +234,7 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                     )}
 
                     {slide.id === 'calidad' && (
-                        <div className="max-w-5xl mx-auto w-full">
+                        <div className="max-w-5xl mx-auto w-full py-10 md:py-0 text-left">
                             <h2 className="text-4xl font-bold mb-2">{slide.title}</h2>
                             <p className="text-sm text-gray-500 font-light italic mb-12">{slide.lead}</p>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -261,7 +259,7 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                     )}
 
                     {slide.id === 'stack_tecnologico' && (
-                        <div className="max-w-6xl mx-auto w-full">
+                        <div className="max-w-6xl mx-auto w-full py-10 md:py-0">
                             <div className="text-center mb-16">
                                 <h2 className="text-4xl md:text-5xl font-bold mb-4">{slide.title}</h2>
                                 <p className="text-[#B7F4FF] tracking-[0.2em] uppercase text-sm">{slide.subtitle}</p>
@@ -287,12 +285,14 @@ export const SlideViewer = ({ slides, activeSprint }) => {
                 </motion.div>
             </AnimatePresence>
 
-            <div className="absolute bottom-10 right-10 flex gap-4 z-[100]">
-                <button disabled={currentSlide === 0} onClick={() => setCurrentSlide(p => p - 1)} className="p-4 border border-white/10 rounded-full hover:bg-white/5 disabled:opacity-20 transition-all active:scale-95"><ChevronLeft size={20} /></button>
+            {/* CORRECCIÓN PASO 2: Botones de navegación en posición FIXED */}
+            <div className="fixed bottom-10 right-10 flex gap-4 z-[100]">
+                <button disabled={currentSlide === 0} onClick={() => setCurrentSlide(p => p - 1)} className="p-4 border border-white/10 rounded-full hover:bg-white/5 disabled:opacity-20 transition-all active:scale-95 bg-black/20 backdrop-blur-sm"><ChevronLeft size={20} /></button>
                 <button disabled={currentSlide === slides.length - 1} onClick={() => setCurrentSlide(p => p + 1)} className="p-4 bg-[#8B5CF6] rounded-full hover:bg-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.3)] disabled:opacity-20 transition-all active:scale-95"><ChevronRight size={20} /></button>
             </div>
 
-            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white/5">
+            {/* CORRECCIÓN PASO 2: Barra de progreso en posición FIXED */}
+            <div className="fixed bottom-0 left-0 w-full h-[1px] bg-white/5 z-[100]">
                 <motion.div className="h-full bg-gradient-to-r from-[#8B5CF6] via-[#B7F4FF] to-[#8B5CF6]" animate={{ width: `${((currentSlide + 1) / slides.length) * 100}%` }} transition={{ duration: 0.5 }} />
             </div>
         </>
