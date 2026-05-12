@@ -5,6 +5,7 @@ import { Home } from './components/Home'; // Nuevo import
 
 import { sprint1Slides } from './data/sprint1';
 import { sprint2Slides } from './data/sprint2';
+import { sprint3Slides } from './data/sprint3';
 
 const App = () => {
   // Cambiamos el estado inicial a 'home'
@@ -14,7 +15,7 @@ const App = () => {
   const sprintDataMap = {
     1: sprint1Slides,
     2: sprint2Slides,
-    3: [],
+    3: sprint3Slides,
     4: [],
     5: [],
     6: []
